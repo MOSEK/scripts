@@ -102,12 +102,16 @@ elif username == 'Administrator':
     install_prefix = global_path
     global_install = True
     print(f"=== Install globally: {install_prefix}")
+elif home is not None:
+    make_symlinks = False
+    install_prefix = home_dir
 else:
     install_prefix = home_dir
     print(f"=== Install to user default: {install_prefix}")
 
 if install_prefix is None:
     print("=== Could not determine install prefix")
+    sys.exit(1)
 
 install_prefix = install_prefix.absolute()
 
