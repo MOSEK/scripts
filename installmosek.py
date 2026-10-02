@@ -49,8 +49,6 @@ try:
 except:
     username = None
 
-print("username = ",username, username == 'root')
-
 def majminver(s):
     o = re.match(r'([0-9]+)\.([0-9]+)(?:\.([0-9]+))?',s)
     if o is None:
@@ -77,40 +75,40 @@ make_symlinks = False
 global_install = False
 
 if a.dry_run:
-    print("=== DRY RUN")
+    print("=== DRY RUN",file=sys.stderr)
 
 if   a.prefix is not None:
     make_symlinks = False
     install_prefix = Path(a.prefix)
-    print(f"=== Install to prefix: {install_prefix}")
+    print(f"=== Install to prefix: {install_prefix}",file=sys.stderr)
 elif a.user:
     make_symlinks = False
     install_prefix = home_dir
-    print(f"=== Install to user directory: {install_prefix}")
+    print(f"=== Install to user directory: {install_prefix}",file=sys.stderr)
 elif getattr(a,'global'):
     make_symlinks = not a.no_symlinks
     install_prefix = global_path
     global_install = True
-    print(f"=== Install globally: {install_prefix}")
+    print(f"=== Install globally: {install_prefix}",file=sys.stderr)
 elif username == 'root':
     make_symlinks = not a.no_symlinks
     install_prefix = global_path
     global_install = True
-    print(f"=== Install globally: {install_prefix}")
+    print(f"=== Install globally: {install_prefix}",file=sys.stderr)
 elif username == 'Administrator':
     make_symlinks = not a.no_symlinks
     install_prefix = global_path
     global_install = True
-    print(f"=== Install globally: {install_prefix}")
+    print(f"=== Install globally: {install_prefix}",file=sys.stderr)
 elif home is not None:
     make_symlinks = False
     install_prefix = home_dir
 else:
     install_prefix = home_dir
-    print(f"=== Install to user default: {install_prefix}")
+    print(f"=== Install to user default: {install_prefix}",file=sys.stderr)
 
 if install_prefix is None:
-    print("=== Could not determine install prefix")
+    print("=== Could not determine install prefix",file=sys.stderr)
     sys.exit(1)
 
 install_prefix = install_prefix.absolute()
@@ -136,16 +134,16 @@ except: pass
 mosek_base    = install_prefix.joinpath('mosek',mosekver2)
 mosek_bin_dir = mosek_base.joinpath('tools','platform',a.platform,'bin')
 
-print(f'=== Downloading MOSEK {mosekverstr}')
+print(f'=== Downloading MOSEK {mosekverstr}',file=sys.stderr)
 
 if a.dry_run:
-    print(f"=== Unpacking to {install_prefix}")
+    print(f"=== Unpacking to {install_prefix}",file=sys.stderr)
 else:
     with urllib.request.urlopen(f'https://download.mosek.com/stable/{mosekverstr}/mosektools{a.platform}{distro_ext}') as req:
         with tempfile.NamedTemporaryFile(prefix=f"mosektools{a.platform}-{mosekverstr}-",suffix=distro_ext,delete_on_close=False) as f:
             shutil.copyfileobj(req,f)
             f.flush()
-            print(f"=== Unpacking to {install_prefix}")
+            print(f"=== Unpacking to {install_prefix}",file=sys.stderr)
             f.close()
             if distro_ext == '.zip':
                 with zipfile.ZipFile(f.name,'r') as zf:
@@ -157,7 +155,7 @@ else:
 # symlinks / linux and osx
 if make_symlinks and global_install:
     if sys.platform == 'linux':
-        print("=== Making global symlinks")
+        print("=== Making global symlinks",file=sys.stderr)
         if not a.dry_run:
             os.symlink(mosek_bin_dir.joinpath('mosek'),   Path('/usr/bin/mosek'))
             os.symlink(mosek_bin_dir.joinpath('mosekcli'),Path('/usr/bin/mosekcli'))
@@ -190,7 +188,7 @@ if make_symlinks and global_install:
 # test
 errors = []
 if a.test:
-    print(f'=== Test...')
+    print(f'=== Test...',file=sys.stderr)
     if not not a.dry_run:
         mosekbin = mosek_bin_dir.joinpath('mosek')
         try: subprocess.check_call([ mosekbin,'-version'])
@@ -201,7 +199,7 @@ if a.test:
             except: errors.append(f'FAILED to execute mosek command line tool via PATH')
 
 if a.test_license:
-    print(f'=== Test license...')
+    print(f'=== Test license...',file=sys.stderr)
     if not not a.dry_run:
         mosekbin = mosek_bin_dir.joinpath('mosekcli')
         try: subprocess.check_call([ mosekbin,'-read', mosek_base.joinpath('tools','examples','data','25fv47.mps')])
