@@ -143,7 +143,7 @@ else:
         with tempfile.NamedTemporaryFile(prefix=f"mosektools{a.platform}-{mosekverstr}-",suffix=distro_ext,delete_on_close=False) as f:
             shutil.copyfileobj(req,f)
             f.flush()
-            print(f"=== Unpacking to {install_prefix}",file=sys.stderr)
+            print(f"=== Unpacking to {install_prefix} ({mosek_base})",file=sys.stderr)
             f.close()
             if distro_ext == '.zip':
                 with zipfile.ZipFile(f.name,'r') as zf:
