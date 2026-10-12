@@ -137,7 +137,7 @@ mosek_bin_dir = mosek_base.joinpath('tools','platform',a.platform,'bin')
 print(f'=== Downloading MOSEK {mosekverstr}',file=sys.stderr)
 
 if a.dry_run:
-    print(f"=== Unpacking to {install_prefix}",file=sys.stderr)
+    print(f"=== Unpacking to {install_prefix} ({mosek_base})",file=sys.stderr)
 else:
     with urllib.request.urlopen(f'https://download.mosek.com/stable/{mosekverstr}/mosektools{a.platform}{distro_ext}') as req:
         with tempfile.NamedTemporaryFile(prefix=f"mosektools{a.platform}-{mosekverstr}-",suffix=distro_ext,delete_on_close=False) as f:
