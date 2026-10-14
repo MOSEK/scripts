@@ -100,7 +100,7 @@ elif username == 'Administrator':
     install_prefix = global_path
     global_install = True
     print(f"=== Install globally: {install_prefix}",file=sys.stderr)
-elif home is not None:
+elif home_dir is not None:
     make_symlinks = False
     install_prefix = home_dir
 else:
